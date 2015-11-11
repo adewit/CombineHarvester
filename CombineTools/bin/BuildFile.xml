@@ -4,6 +4,9 @@
 <bin file="HhhExample.cpp" name="HhhExample"></bin>
 <bin file="AZhExample.cpp" name="AZhExample"></bin>
 <bin file="ImpactsTable.cpp" name="ImpactsTable"></bin>
+<bin file="IsolationOptimisation.cpp" name="IsolationOptimisation"></bin>
+<bin file="IDOptimisation.cpp" name="IDOptimisation"></bin>
+<bin file="ElectronIDFit.cpp" name="ElectronIDFit"></bin>
 <bin file="LimitCompare.cpp" name="LimitCompare"></bin>
 <bin file="MSSMExample.cpp" name="MSSMExample"></bin>
 <bin file="MSSMUpdate.cpp" name="MSSMUpdate"></bin>
