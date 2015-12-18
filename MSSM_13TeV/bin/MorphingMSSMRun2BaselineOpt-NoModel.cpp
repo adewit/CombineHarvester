@@ -42,8 +42,8 @@ int main(int argc, char** argv) {
       string(getenv("CMSSW_BASE")) + "/src/auxiliaries/shapes/Imperial/";
 
   VString chns =
-      //{"tt"};
-      {"mt","et","tt","em"};
+      {"et"};
+    //  {"mt","et","tt","em"};
 
   RooRealVar mA(mass.c_str(), mass.c_str(), 90., 1000.);
   RooRealVar mH("mH", "mH", 90., 1000.);
@@ -67,8 +67,26 @@ int main(int argc, char** argv) {
   //
   map<string,Categories> cats;
   cats["et_13TeV"] = {
-    {8, "et_nobtagnotwoprong"},
-    {9, "et_btagnotwoprong"}
+    {1, "et_nobtagdb03iso0p07"},
+    {2, "et_btagdb03iso0p07"},
+    {3, "et_nobtagdb03iso0p08"},
+    {4, "et_btagdb03iso0p08"},
+    {5, "et_nobtagdb03iso0p09"},
+    {6, "et_btagdb03iso0p09"},
+    {7, "et_nobtagdb03iso0p1"},
+    {8, "et_btagdb03iso0p1"},
+    {9, "et_nobtagdb03iso0p11"},
+    {10, "et_btagdb03iso0p11"},
+    {11, "et_nobtagdb03iso0p12"},
+    {12, "et_btagdb03iso0p12"},
+    {13, "et_nobtagdb03iso0p13"},
+    {14, "et_btagdb03iso0p13"},
+    {15, "et_nobtagdb03iso0p14"},
+    {16, "et_btagdb03iso0p14"},
+    {17, "et_nobtagdb03iso0p15"},
+    {18, "et_btagdb03iso0p15"},
+    {19, "et_nobtagdb03iso0p16"},
+    {20, "et_btagdb03iso0p16"}
     };
 
   cats["em_13TeV"] = {
@@ -79,7 +97,6 @@ int main(int argc, char** argv) {
   cats["tt_13TeV"] = {
     {8, "tt_nobtagnotwoprong"},
     {9, "tt_btagnotwoprong"}
-
     };
   
   cats["mt_13TeV"] = {
@@ -116,15 +133,15 @@ int main(int argc, char** argv) {
   //! [part7]
   for (string chn:chns){
     cb.cp().channel({chn}).backgrounds().ExtractShapes(
-        input_dir + "htt_"+chn+".inputs-mssm-13TeV.root",
+        input_dir + "htt_"+chn+".inputs-mssm-13TeV-BASELINE.root",
         "$BIN/$PROCESS",
         "$BIN/$PROCESS_$SYSTEMATIC");
     cb.cp().channel({chn}).process(signal_types["ggH"]).ExtractShapes(
-        input_dir + "htt_"+chn+".inputs-mssm-13TeV.root",
+        input_dir + "htt_"+chn+".inputs-mssm-13TeV-BASELINE.root",
         "$BIN/ggH$MASS",
         "$BIN/ggH$MASS_$SYSTEMATIC");
     cb.cp().channel({chn}).process(signal_types["bbH"]).ExtractShapes(
-        input_dir + "htt_"+chn+".inputs-mssm-13TeV.root",
+        input_dir + "htt_"+chn+".inputs-mssm-13TeV-BASELINE.root",
         "$BIN/bbH$MASS",
         "$BIN/bbH$MASS_$SYSTEMATIC");
    }
@@ -176,11 +193,11 @@ int main(int argc, char** argv) {
   cb.cp().process(ch::JoinStr({signal_types["ggH"], signal_types["bbH"]})).ExtractPdfs(cb, "htt", "$BIN_$PROCESS_morph");
   cb.PrintAll();
   
-  string folder = "output/mssm_run2/cmb";
-  boost::filesystem::create_directories(folder);
+  //string folder = "output/mssm_run2/cmb";
+  //boost::filesystem::create_directories(folder);
   
   cout << "Writing datacards ...";
-  TFile output((folder + "/htt_mssm_input.root").c_str(), "RECREATE");
+  /*TFile output((folder + "/htt_mssm_input.root").c_str(), "RECREATE");
   for (string chn : chns) {
     auto bins = cb.cp().channel({chn}).bin_set();
     for (auto b : bins) {
@@ -188,15 +205,19 @@ int main(int argc, char** argv) {
     }
   }
   cb.cp().mass({"*"}).WriteDatacard(folder + "/htt_mssm.txt", output);
-  output.Close();
+  output.Close();*/
+  
+  std::vector<std::string> foldernames = {"iso0p07","iso0p08","iso0p09","iso0p1","iso0p11","iso0p12","iso0p13","iso0p14","iso0p15","iso0p16"};
 
   for (string chn : chns) {
-     string folderchn = "output/mssm_run2/"+chn;
+   for(int i=0;i<10;++i){
+     string folderchn = "output/mssm_run2/"+chn+"/"+foldernames.at(i);
      boost::filesystem::create_directories(folderchn);
      TFile outputchn((folderchn + "/htt_"+chn+"_mssm_input.root").c_str(), "RECREATE");
-     cb.cp().channel({chn}).mass({"*"}).WriteDatacard(folderchn + "/htt_"+chn+"_mssm.txt", outputchn);
+     cb.cp().channel({chn}).mass({"*"}).bin_id({i,i+1}).WriteDatacard(folderchn + "/htt_"+chn+"_mssm.txt", outputchn);
      outputchn.Close();
   }
+}
      
   cout << " done\n";
 
