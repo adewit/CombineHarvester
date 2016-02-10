@@ -119,7 +119,7 @@ if not manual_blind and not auto_blind: manual_blind=True
 #If call to PostFitWithShapes is requested, this is performed here
 if args.postfitshapes or soverb_plot:
   for root,dirnames,filenames in os.walk(args.dir):
-    for filename in fnmatch.filter(filenames, '*.txt.cmb'):
+    for filename in fnmatch.filter(filenames, '*.txt'):
       datacard_file = os.path.join(root,filename) 
     for filename in fnmatch.filter(filenames, '*%(workspace)s.root'%vars()):
       workspace_file = os.path.join(root,filename)
@@ -257,11 +257,12 @@ for i,t in enumerate(background_schemes[channel]):
   plots = t['plot_list']
   h = ROOT.TH1F()
   for j,k in enumerate(plots):
-    if j==0:
+    if h.GetEntries()==0 and getHistogram(histo_file,k) is not None:
       h = getHistogram(histo_file,k)[0]
       h.SetName(k)
     else:
-      h.Add(getHistogram(histo_file,k)[0])
+      if getHistogram(histo_file,k) is not None:
+        h.Add(getHistogram(histo_file,k)[0])
   h.SetFillColor(t['colour'])
   h.SetLineColor(ROOT.kBlack)
   h.SetMarkerSize(0)
