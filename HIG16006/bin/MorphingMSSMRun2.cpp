@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
   po::options_description config("configuration");
   config.add_options()
     ("mass,m", po::value<string>(&mass)->default_value(mass))
-    ("auto_rebin", po::value<bool>(&auto_rebin)->default_value(false))
+    ("auto_rebin", po::value<bool>(&auto_rebin)->default_value(true))
     ("manual_rebin", po::value<bool>(&manual_rebin)->default_value(false))
     ("output_folder", po::value<string>(&output_folder)->default_value("mssm_run2"))
     ("SM125,h", po::value<string>(&SM125)->default_value(SM125));
@@ -47,14 +47,14 @@ int main(int argc, char** argv) {
   typedef vector<string> VString;
   typedef vector<pair<int, string>> Categories;
   string input_dir =
-      string(getenv("CMSSW_BASE")) + "/src/shapes/Imperial/dc-jes/";
+      string(getenv("CMSSW_BASE")) + "/src/shapes/Imperial/jes-dc/";
       //"./datacards-2501/";
       //"./shapes/Imperial/";
 
   VString chns =
       //{"tt"};
    //   {"mt"};
-      {"mt"};
+      {"mt","et","tt","em"};
 
   RooRealVar mA(mass.c_str(), mass.c_str(), 90., 3200.);
   RooRealVar mH("mH", "mH", 90., 3200.);
@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
   ch::CombineHarvester cb;
   // Uncomment this next line to see a *lot* of debug information
   // cb.SetVerbosity(3);
-
+ 
   // Here we will just define two categories for an 8TeV analysis. Each entry in
   // the vector below specifies a bin name and corresponding bin_id.
   //
@@ -134,19 +134,19 @@ int main(int argc, char** argv) {
 
 
   ch::AddMSSMRun2Systematics(cb);
-
-  //! [part7]
+ 
+    //! [part7]
   for (string chn:chns){
     cb.cp().channel({chn}).backgrounds().ExtractShapes(
-        input_dir + "htt_"+chn+".inputs-mssm-13TeV-mvis.root",
+        input_dir + "htt_"+chn+".inputs-mssm-13TeV-mttot.root",
         "$BIN/$PROCESS",
         "$BIN/$PROCESS_$SYSTEMATIC");
     cb.cp().channel({chn}).process(signal_types["ggH"]).ExtractShapes(
-        input_dir + "htt_"+chn+".inputs-mssm-13TeV-mvis.root",
+        input_dir + "htt_"+chn+".inputs-mssm-13TeV-mttot.root",
         "$BIN/ggH$MASS",
         "$BIN/ggH$MASS_$SYSTEMATIC");
     cb.cp().channel({chn}).process(signal_types["bbH"]).ExtractShapes(
-        input_dir + "htt_"+chn+".inputs-mssm-13TeV-mvis.root",
+        input_dir + "htt_"+chn+".inputs-mssm-13TeV-mttot.root",
         "$BIN/bbH$MASS",
         "$BIN/bbH$MASS_$SYSTEMATIC");
    }
