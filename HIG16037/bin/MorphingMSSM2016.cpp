@@ -536,7 +536,7 @@ int main(int argc, char** argv) {
   /*cb.cp().syst_name({"CMS_scale_j_13TeV"}).ForEachSyst([](ch::Systematic *sys) { sys->set_type("lnN");});
   cb.cp().syst_name({"CMS_scale_b_13TeV"}).ForEachSyst([](ch::Systematic *sys) { sys->set_type("lnN");});
   cb.cp().syst_name({"CMS_fake_b_13TeV"}).ForEachSyst([](ch::Systematic *sys) { sys->set_type("lnN");});*/
-  cb.RenameSystematic("CMS_htt_wFakeShape_13TeV","CMS_htt_wFakeShape_13TeV_2016");
+  cb.RenameSystematic(cb,"CMS_htt_wFakeShape_13TeV","CMS_htt_wFakeShape_13TeV_2016");
 
   // This function modifies every entry to have a standardised bin name of
   // the form: {analysis}_{channel}_{bin_id}_{era}

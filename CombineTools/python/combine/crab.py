@@ -29,4 +29,4 @@ config.section_('User')
 
 config.section_('Site')
 config.Site.blacklist = ['T3_IT_Bologna','T3_US_UMiss']
-config.Site.storageSite = 'T2_CH_CERN'
+config.Site.storageSite = 'T2_UK_London_IC'
