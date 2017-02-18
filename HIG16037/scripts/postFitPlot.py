@@ -104,8 +104,8 @@ parser.add_argument('--outname',default='',help='Optional string for start of ou
 parser.add_argument('--bkg_fractions', default=False, action='store_true', help='Instead of yields for each process plot fraction of total bkg in each bin')
 parser.add_argument('--ratio_range',  help='y-axis range for ratio plot in format MIN,MAX', default="0.7,1.3")
 parser.add_argument('--no_signal', action='store_true',help='Do not draw signal')
-parser.add_argument('--x_title', default='m_{T}^{tot} (GeV)',help='Title for the x-axis')
-parser.add_argument('--y_title', default='dN/dM_{T}^{tot} (1/GeV)',help='Title for the y-axis')
+parser.add_argument('--x_title', default='',help='Title for the x-axis')
+parser.add_argument('--y_title', default='Yield',help='Title for the y-axis')
 parser.add_argument('--lumi', default='12.9 fb^{-1} (13 TeV)',help='Lumi label')
 
 
@@ -355,7 +355,6 @@ stack = ROOT.THStack("hs","")
 for hists in bkg_histos:
   stack.Add(hists)
 
-
 #Setup style related things
 c2 = ROOT.TCanvas()
 c2.cd()
@@ -373,16 +372,22 @@ if args.ratio and not fractions:
   axish = createAxisHists(2,bkghist,bkghist.GetXaxis().GetXmin(),bkghist.GetXaxis().GetXmax()-0.01)
   axish[1].GetXaxis().SetTitle(args.x_title)
   axish[1].GetYaxis().SetNdivisions(4)
+  axish[1].GetXaxis().SetNdivisions(0)
+  axish[1].GetXaxis().SetTitleSize(0)
+  axish[1].GetXaxis().SetLabelSize(0)
   if not soverb_plot: axish[1].GetYaxis().SetTitle("Obs/Exp")
   else: axish[1].GetYaxis().SetTitle("S/#sqrt(B)")
-  #axish[1].GetYaxis().SetTitleSize(0.04)
+  axish[1].GetYaxis().SetTitleSize(0.035)
+  axish[1].GetYaxis().SetTitleOffset(1.8)
   #axish[1].GetYaxis().SetLabelSize(0.04)
   #axish[1].GetYaxis().SetTitleOffset(1.3)
   #axish[0].GetYaxis().SetTitleSize(0.04)
-  #axish[0].GetYaxis().SetLabelSize(0.04)
-  #axish[0].GetYaxis().SetTitleOffset(1.3)
+  axish[0].GetYaxis().SetLabelSize(0.04)
+  axish[0].GetYaxis().SetTitleSize(0.035)
+  axish[0].GetYaxis().SetTitleOffset(1.8)
   axish[0].GetXaxis().SetTitleSize(0)
   axish[0].GetXaxis().SetLabelSize(0)
+  axish[0].GetXaxis().SetNdivisions(1)
   if custom_x_range:
     axish[0].GetXaxis().SetRangeUser(x_axis_min,x_axis_max-0.01)
     axish[1].GetXaxis().SetRangeUser(x_axis_min,x_axis_max-0.01)
@@ -474,8 +479,8 @@ latex2.DrawLatex(0.145,0.955,channel_label)
 
 #CMS and lumi labels
 plot.FixTopRange(pads[0], plot.GetPadYMax(pads[0]), extra_pad if extra_pad>0 else 0.30)
-plot.DrawCMSLogo(pads[0], 'CMS', 'Preliminary', 11, 0.045, 0.05, 1.0, '', 1.0)
-plot.DrawTitle(pads[0], args.lumi, 3)
+#plot.DrawCMSLogo(pads[0], 'CMS', 'Preliminary', 11, 0.045, 0.05, 1.0, '', 1.0)
+#plot.DrawTitle(pads[0], args.lumi, 3)
 
 #Add ratio plot if required
 if args.ratio and not soverb_plot and not fractions:

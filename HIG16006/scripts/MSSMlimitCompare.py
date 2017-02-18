@@ -192,8 +192,11 @@ plot.Set(h_top.GetXaxis(), LabelSize=0, TitleSize=0, TickLength=0)
 plot.Set(h_top.GetYaxis(), LabelSize=0, TitleSize=0, TickLength=0)
 h_top.Draw()
 
-legend = plot.PositionedLegend(0.5 if args.relative or args.absolute else 0.4, 0.11, 3, 0.015)
-plot.Set(legend, NColumns=1, Header='#bf{%.0f%% CL Excluded:}' % 95)
+#legend = plot.PositionedLegend(0.5 if args.relative or args.absolute else 0.4, 0.11, 3, 0.015)
+#plot.Set(legend, NColumns=1, Header='#bf{%.0f%% CL Excluded:}' % 95)
+legend = plot.PositionedLegend(0.75,0.11,3,0.015)
+plot.Set(legend, NColumns=2, Header='#bf{%.0f%% CL Excluded:}' % 95)
+
 if not (args.relative or args.absolute):
   for i in range(len(files)):
     legend.AddEntry(exp_graph_list[i],labels[i],"PL")
@@ -216,9 +219,9 @@ latex2.SetTextColor(ROOT.kBlack)
 latex2.SetTextSize(0.032)
 latex2.DrawLatex(0.125,0.96,channel_label)
 
-plot.DrawCMSLogo(pads[0], 'CMS', args.cms_sub, 11, 0.045, 0.15, 1.0, '', 1.0)
+#plot.DrawCMSLogo(pads[0], 'CMS', args.cms_sub, 11, 0.045, 0.15, 1.0, '', 1.0)
 plot.DrawTitle(pads[0], '%s'%args.title, 3);
-plot.FixOverlay()
+#plot.FixOverlay()
 
 # Redraw the frame because it usually gets covered by the filled areas
 pads[1].cd()

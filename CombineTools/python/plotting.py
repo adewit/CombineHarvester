@@ -833,18 +833,20 @@ def makeVarBinHist2D(name, xbins, ybins):
 
 
 def GraphDifference(graph1,graph2,relative):
+    diff_graph = graph1.Clone()
     xvals =[]
     yvals =[]
     if graph1.GetN() != graph2.GetN():
-        return graph1
+        return None
     for i in range(graph1.GetN()):
-        xvals.append(graph1.GetX()[i])
-        if relative :
-            yvals.append(2*abs(graph1.GetY()[i]-graph2.GetY()[i])/(graph1.GetY()[i]+graph2.GetY()[i]))
-        else: 
-            yvals.append(2*(graph1.GetY()[i]-graph2.GetY()[i])/(graph1.GetY()[i]+graph2.GetY()[i]))
-    diff_graph = R.TGraph(len(xvals),array('d',xvals),array('d',yvals))
-    diff_graph.Sort()
+        diff_graph.GetY()[i]=2*abs(graph1.GetY()[i]-graph2.GetY()[i])/(graph1.GetY()[i]+graph2.GetY()[i])
+#        xvals.append(graph1.GetX()[i])
+#        if relative :
+#            yvals.append(2*abs(graph1.GetY()[i]-graph2.GetY()[i])/(graph1.GetY()[i]+graph2.GetY()[i]))
+#        else: 
+#            yvals.append(2*(graph1.GetY()[i]-graph2.GetY()[i])/(graph1.GetY()[i]+graph2.GetY()[i]))
+#    diff_graph = R.TGraph(len(xvals),array('d',xvals),array('d',yvals))
+#    diff_graph.Sort()
     return diff_graph
 
 

@@ -213,23 +213,25 @@ ratio_graphs = []
 
 if args.ratio_to is not None:
     pads[1].cd()
-    plot.SetupTwoPadSplitAsRatio(pads, axis[0], axis[1], 'Ratio_{}', True, 0.1, 2.4)
+    plot.SetupTwoPadSplitAsRatio(pads, axis[0], axis[1], 'Rel. Diff_{}', True, 0.1, 2.4)
     axis[1].SetNdivisions(506, 'Y')
     splitsrc = args.ratio_to.split(':')
     ref = plot.LimitTGraphFromJSONFile(splitsrc[0], splitsrc[1])
     for gr_set in graph_sets:
         ratio_set = {}
         for key in gr_set:
-            ratio_set[key] = plot.GraphDivide(gr_set[key], ref)
+            ratio_set[key] = plot.GraphDifference(gr_set[key], ref,True)
         ratio_graph_sets.append(ratio_set)
         plot.DrawLimitBand(pads[1], ratio_graph_sets[-1])
         pads[1].RedrawAxis()
         pads[1].RedrawAxis('g')
         pads[1].GetFrame().Draw()
     for gr in graphs:
-        ratio_graphs.append(plot.GraphDivide(gr, ref))
-        ratio_graphs[-1].Draw('LP')
-    ry_min, ry_max = (plot.GetPadYMin(pads[1]), plot.GetPadYMax(pads[1]))
+        if(plot.GraphDifference(gr, ref, True) is not None):
+          ratio_graphs.append(plot.GraphDifference(gr, ref,True))
+          ratio_graphs[-1].Draw('LP')
+    ry_min, ry_max = (0,0.5)
+    #ry_min, ry_max = (plot.GetPadYMin(pads[1]), plot.GetPadYMax(pads[1]))
     plot.FixBothRanges(pads[1], ry_min, 0.1, ry_max, 0.1)
 
 
@@ -249,7 +251,7 @@ legend.Draw()
 legend.Draw()
 
 
-plot.DrawCMSLogo(pads[0], 'CMS', args.cms_sub, 11, 0.045, 0.035, 1.2, '', 0.8)
+#plot.DrawCMSLogo(pads[0], 'CMS', args.cms_sub, 11, 0.045, 0.035, 1.2, '', 0.8)
 plot.DrawTitle(pads[0], args.title_right, 3)
 plot.DrawTitle(pads[0], args.title_left, 1)
 

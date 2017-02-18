@@ -107,9 +107,9 @@ int main(int argc, char** argv) {
   input_dir["tt"]  = string(getenv("CMSSW_BASE")) + "/src/CombineHarvester/HIG16006/shapes/"+input_folder_tt+"/";
 
   VString chns =
-  //    {"tt"};
+      {"tt"};
  //     {"mt"};
-      {"mt","et","tt","em"};
+//      {"mt","et","tt","em"};
 
   RooRealVar mA(mass.c_str(), mass.c_str(), 90., 3200.);
   mA.setConstant(true);

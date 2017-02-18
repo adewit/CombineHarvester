@@ -8,8 +8,8 @@ CHN_DICT = {
 }
 
 CAT_DICT = {
-    "8": "no b-tag",
-    "9": "b-tag"
+    "10": "no b-tag high m_{T}",
+    "13": "b-tag high m_{T}"
 }
 
 RANGE_DICT = {
@@ -21,32 +21,32 @@ RANGE_DICT = {
 
 PAD_DICT = {
     "em" : 0.42 ,
-    "et" : 0.45 ,
+    "et" : 0.57 ,
     "mt" : 0.45 , 
     "tt" : 0.5 
 }
 
 
-for MODE in ['prefit', 'postfit']:
-    for CHN in ['et', 'mt', 'em', 'tt']:
-        for CAT in ['8', '9']:
+for MODE in ['postfit']:
+    for CHN in ['et']:
+        for CAT in ['10', '13']:
             LABEL = "%s %s" % (CHN_DICT[CHN], CAT_DICT[CAT])
             YMIN = "%s" % RANGE_DICT[CHN]
             PAD = "%s" % PAD_DICT[CHN]
             os.system(('python scripts/postFitPlot.py' \
-                  ' --file=shapes.root --ratio --extra_pad="%(PAD)s" --mA=1000 --tanb=50 --model_dep' \
-                  ' --file_dir="htt_%(CHN)s_%(CAT)s" --custom_x_range --x_axis_min=0.1 --x_axis_max 1E4' \
-                  ' --ratio_range 0.4,1.6 --empty_bin_error' \
-                  ' --outname htt_%(CHN)s_%(CAT)s --mode %(MODE)s --log_x --log_y --custom_y_range --y_axis_min "%(YMIN)s" ' \
+                  ' --file=shapes.root --ratio --extra_pad="%(PAD)s" --mA=1000 --tanb=50 --model_dep --no_signal' \
+                  ' --file_dir="htt_%(CHN)s_%(CAT)s" --custom_x_range --x_axis_min=0 --x_axis_max 1' \
+                  ' --ratio_range 0.9,1.1 --empty_bin_error' \
+                  ' --outname htt_%(CHN)s_%(CAT)s --mode %(MODE)s --custom_y_range --y_axis_min "%(YMIN)s" ' \
                   ' --channel_label "%(LABEL)s"' % vars()))
 
-for MODE in ['prefit', 'postfit']:
-    for CHN in ['et', 'mt', 'em', 'tt']:
-        for CAT in ['8', '9']:
-            LABEL = "%s %s" % (CHN_DICT[CHN], CAT_DICT[CAT])
-            os.system(('python scripts/postFitPlot.py' \
-                  ' --file=shapes.root --ratio --extra_pad=0.6 --mA=1000 --tanb=50 --model_dep --no_signal' \
-                  ' --file_dir="htt_%(CHN)s_%(CAT)s" --custom_x_range --x_axis_min=0 --x_axis_max 200' \
-                  ' --ratio_range 0.4,1.6 ' \
-                  ' --outname htt_%(CHN)s_%(CAT)s --mode %(MODE)s' \
-                  ' --channel_label "%(LABEL)s"' % vars()))
+#for MODE in ['prefit', 'postfit']:
+#    for CHN in ['et', 'mt', 'em', 'tt']:
+#        for CAT in ['8', '9']:
+#            LABEL = "%s %s" % (CHN_DICT[CHN], CAT_DICT[CAT])
+#            os.system(('python scripts/postFitPlot.py' \
+#                  ' --file=shapes.root --ratio --extra_pad=0.6 --mA=1000 --tanb=50 --model_dep --no_signal' \
+#                  ' --file_dir="htt_%(CHN)s_%(CAT)s" --custom_x_range --x_axis_min=0 --x_axis_max 200' \
+#                  ' --ratio_range 0.4,1.6 ' \
+#                  ' --outname htt_%(CHN)s_%(CAT)s --mode %(MODE)s' \
+#                  ' --channel_label "%(LABEL)s"' % vars()))
