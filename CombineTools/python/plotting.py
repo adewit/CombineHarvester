@@ -838,8 +838,10 @@ def GraphDifference(graph1,graph2,relative):
     yvals =[]
     if graph1.GetN() != graph2.GetN():
         return None
+    totdiff=0
     for i in range(graph1.GetN()):
         diff_graph.GetY()[i]=2*abs(graph1.GetY()[i]-graph2.GetY()[i])/(graph1.GetY()[i]+graph2.GetY()[i])
+        totdiff+=diff_graph.GetY()[i]
 #        xvals.append(graph1.GetX()[i])
 #        if relative :
 #            yvals.append(2*abs(graph1.GetY()[i]-graph2.GetY()[i])/(graph1.GetY()[i]+graph2.GetY()[i]))
@@ -847,6 +849,8 @@ def GraphDifference(graph1,graph2,relative):
 #            yvals.append(2*(graph1.GetY()[i]-graph2.GetY()[i])/(graph1.GetY()[i]+graph2.GetY()[i]))
 #    diff_graph = R.TGraph(len(xvals),array('d',xvals),array('d',yvals))
 #    diff_graph.Sort()
+    if totdiff <0.1:
+       return None
     return diff_graph
 
 
