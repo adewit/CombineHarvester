@@ -7,6 +7,8 @@ import glob
 import os
 import argparse
 
+R.TH1.AddDirectory(False)
+
 parser = argparse.ArgumentParser()
 parser.add_argument(
  '--channel', default='all', help="""Which channels to run? Supported options: 'all', 'Znn', 'Zee', 'Zmm', 'Zll', 'Wen', 'Wmn','Wln'""")
@@ -14,6 +16,12 @@ parser.add_argument(
  '--output_folder', default='vhbb2016', help="""Subdirectory of ./output/ where the cards are written out to""")
 parser.add_argument(
  '--auto_rebin', action='store_true', help="""Rebin automatically?""")
+parser.add_argument(
+ '--prune_shapes', action='store_true', help="""Convert shapes to lnN if there is no significant shape variation?""")
+parser.add_argument(
+ '--bbb_mode', default=1, type=int, help="""Sets the type of bbb uncertainty setup. 0: no bin-by-bins, 1: bbb's as in 2016 analysis, 2: Use the CH bbb factory to add bbb's, 3: as 2 but with new CMSHistFunc, 4: autoMCstats """)
+
+print 'aaaa'
 
 args = parser.parse_args()
 
@@ -100,8 +108,9 @@ for chn in chns:
   cb.AddProcesses( ['*'], ['vhbb'], ['13TeV'], [chn], sig_procs[chn], cats[chn], True)
 
 systs.AddSystematics(cb)
-systs.AddBinByBinSystematics(cb)
 
+if args.bbb_mode==1:
+  systs.AddBinByBinSystematics(cb)
 
 for chn in chns:
   file = shapes + input_folders[chn] + "/vhbb_"+chn+".root"
@@ -117,7 +126,6 @@ for chn in chns:
     cb.cp().channel([chn]).signals().ExtractShapes(
       file, 'BDT_$BIN_$PROCESS', 'BDT_$BIN_$PROCESS_$SYSTEMATIC')
 
-
 #To rename processes:
 #cb.cp().ForEachObj(lambda x: x.set_process("WH_lep") if x.process()=='WH_hbb' else None)
 
@@ -125,6 +133,62 @@ rebin = ch.AutoRebin().SetBinThreshold(0.).SetBinUncertFraction(1.0).SetRebinMod
 
 if args.auto_rebin:
   rebin.Rebin(cb, cb)
+
+
+def assign_shape(proc):
+  hist1 = proc.ShapeAsTH1F()
+  global proc_hist
+  proc_hist = hist1
+  return None
+
+def calc_chisquared_prob(histo1,histo2):
+  if histo1.GetNbinsX()!= histo2.GetNbinsX(): return None
+  chisquare = 0.
+  nbins = histo1.GetNbinsX()
+  ndof = nbins
+  for i in range(0,nbins):
+    if histo1.GetBinContent(i)!=0 and histo2.GetBinContent(i)!=0:
+      eff_histo_1 = pow(histo1.GetBinContent(i),2)/pow(histo1.GetBinError(i),2) 
+      eff_histo_2 = pow(histo2.GetBinContent(i),2)/pow(histo2.GetBinError(i),2) 
+      chisquare+=pow((eff_histo_1-eff_histo_2),2)/eff_histo_2
+    else: ndof-=1
+  chisquare_prob = R.Math.chisquared_cdf_c(chisquare,ndof-1) 
+  return chisquare_prob
+
+def check_compatibility_and_drop(histo,syst,chn,b,proc):
+  if syst.type()!="shape": return None
+  print syst.name()
+  hist_up  = syst.ShapeUAsTH1F()
+  hist_down = syst.ShapeDAsTH1F()
+  if 0.5*(calc_chisquared_prob(histo,hist_up)+ calc_chisquared_prob(histo,hist_down)) > 0.99999999:
+    print "Converting uncertainty", syst.name()," to lnN for channel ",chn," bin ", b, " process ", proc
+    syst.set_type("lnN")   
+  return None
+
+if args.prune_shapes:
+  print "Starting compatibility test"
+  for chn in chns:
+    for b in cb.bin_set():
+      for proc in bkg_procs[chn]:
+        print chn, b, proc
+        cb.cp().channel([chn]).bin([b]).process([proc]).ForEachProc(assign_shape)
+        cb.cp().channel([chn]).bin([b]).process([proc]).ForEachSyst(lambda syst:
+          check_compatibility_and_drop(proc_hist,syst,chn,b,proc))
+  
+if args.bbb_mode==2 or args.bbb_mode==3:
+  print "Generating bbb uncertainties..."
+  bbb = ch.BinByBinFactory()
+  bbb.SetAddThreshold(0.).SetMergeThreshold(0.4)
+  for chn in chns:
+    print " - Doing bbb for channel ", chn ,"\n"
+    #bbb.MergeAndAdd(cb.cp().channel([chn]).bin_id([1,2]).process(['s_Top','TT','Wj0b','Wj1b','Wj2b','VVHF','VVLF','Zj0b','Zj1b','Zj2b','QCD']),cb)
+    bbb.AddBinByBin(cb.cp().channel([chn]).process(['s_Top','TT','Wj0b','Wj1b','Wj2b','VVHF','VVLF','Zj0b','Zj1b','Zj2b','QCD']),cb)
+    bbb.AddBinByBin(cb.cp().channel([chn]).process(['ZH_hbb','WH_hbb','ggZH_hbb']),cb)
+  if args.bbb_mode==3:
+    cb.AddDatacardLineAtEnd("* autoMCStats -1")
+
+if args.bbb_mode==4:
+  cb.AddDatacardLineAtEnd("* autoMCStats 0")
 
 writer=ch.CardWriter("output/" + args.output_folder + "/$TAG/$BIN.txt",
                       "output/" + args.output_folder + "/$TAG/vhbb_input.root")
@@ -144,3 +208,5 @@ if 'Wen' in chns and 'Wmn' in chns:
 
 if 'Zee' in chns and 'Zmm' in chns:
   writer.WriteCards("Zll",cb.cp().channel(['Zee','Zmm']))
+
+cb.PrintAll()
