@@ -85,58 +85,49 @@ def AddSystematics(cb):
 
   #Theory uncertainties
   cb.cp().AddSyst(cb,
-      'pdf_qqbar', 'lnN', ch.SystMap('channel','bin_id','process') 
-       (['Zee','Zmm'], [1,2,3,4,5,6,7,8], ['Zj0b','Zj1b','Zj2b','VVLF','VVHF'], 1.01)
-       (['Znn'],[1,3,5,7],['VVLF','VVHF'],1.01)
-       (['Wen','Wmn'],[1,3,5,6,7],['ZH_hbb','WH_hbb','VVLF','VVHF'],1.01)) 
+       'pdf_Higgs_qqbar', 'lnN', ch.SystMap('process')
+        (['ZH_hbb'],1.016)
+        (['WH_hbb'],1.019))
 
- #This uncertainty is in the workspace/combined card in the HCG repo but *not* in the per-channel cards committed there
-  cb.cp().channel(['Zee','Zmm','Znn']).process(['WH_hbb','ZH_hbb']).AddSyst(cb,
-      'pdf_HIGGS_qqbar', 'lnN', ch.SystMap()(1.023))
+  cb.cp().process(['ggZH_hbb']).AddSyst(cb,
+      'pdf_Higgs_gg', 'lnN', ch.SystMap()(1.024))
 
-  cb.cp().AddSyst(cb,
-      'pdf_gg', 'lnN', ch.SystMap('channel','bin_id','process')
-      (['Zee','Zmm','Znn'],[1,2,3,4,5,6,7,8],['ggZH_hbb'], 1.18)
-      (['Zee','Zmm','Znn'],[1,2,3,4,5,6,7,8],['TT','s_Top','QCD'], 1.01)
-      (['Wen','Wmn'], [1,3,5,6,7], ['s_Top'],1.01))
+  cb.cp().process(signal).AddSyst(cb,
+      'BR_hbb', 'lnN', ch.SystMap()(1.005))
 
-  #This uncertainty is in the workspace/combined card in the HCG repo but *not* in the per-channel cards committed there
-  cb.cp().channel(['Zee','Zmm','Znn']).process(signal).AddSyst(cb,
-      'BR_hbb', 'lnN', ch.SystMap()(1.024))
+  cb.cp().process(['ggZH_hbb']).AddSyst(cb,
+      'QCDscale_ggZH', 'lnN',ch.SystMap()((1.251,0.811)))
    
   cb.cp().AddSyst(cb,
-      'QCDscale_VH', 'lnN', ch.SystMap('channel','bin_id','process') 
-      (['Zee','Zmm','Znn'],[1,2,3,4,5,6,7,8],['ZH_hbb','ggZH_hbb','WH_hbb'], 1.04)) 
+      'QCDscale_VH', 'lnN', ch.SystMap('process') 
+      (['ZH_hbb'], (1.038,0.969)) 
+      (['WH_hbb'], (1.005,0.993)))
+
+  # To be checked:
+  cb.cp().AddSyst(cb,
+      'CMS_vhbb_boost_EWK_13TeV', 'lnN', ch.SystMap('channel','process') 
+      (['Zee','Zmm'],['ZH_hbb'], 1.02)
+      (['Znn'],['ZH_hbb','WH_hbb','ggZH_hbb'],1.02)
+      (['Wen','Wmn'],['WH_hbb','ZH_hbb'],1.02)) 
+
+  # Theory uncertainties: backgrounds -> to be checked!
+  cb.cp().AddSyst(cb,
+       'pdf_qqbar', 'lnN', ch.SystMap('channel','process') 
+        (['Zee','Zmm'],['Zj0b','Zj1b','Zj2b','VVLF','VVHF','VV'], 1.01)
+        (['Znn'],['VVLF','VVHF'],1.01)
+        (['Wen','Wmn'],['VVLF','VVHF'],1.01)) 
 
   cb.cp().AddSyst(cb,
-      'QCDscale_VH_ggZHacceptance_highPt', 'lnN', ch.SystMap('channel','bin_id','process') 
-      (['Zee','Zmm'],[1,3,5,7],['ggZH_hbb'], 1.32)
-      (['Znn'],[1,3,5,7],['ggZH_hbb'], 1.32)) 
+       'pdf_gg', 'lnN', ch.SystMap('channel','process')
+       (['Zee','Zmm','Znn'],['TT','s_Top','QCD'], 1.01)
+       (['Wen','Wmn'], ['s_Top'],1.01))
 
   cb.cp().AddSyst(cb,
-      'QCDscale_VH_ggZHacceptance_lowPt', 'lnN', ch.SystMap('channel','bin_id','process') 
-      (['Zee','Zmm'],[2,4,6,8],['ggZH_hbb'], 1.32)
-      (['Znn'],[1,3,5,7],['ggZH_hbb'],1.32)) 
+      'QCDscale_ttbar', 'lnN', ch.SystMap('channel','process') 
+      #(['Zee','Zmm','Wen','Wmn','Znn'],['s_Top'], 1.06)
+       (['Zee','Zmm','Wen','Wmn','Znn'],['TT'],1.06)
+      ) 
 
-  cb.cp().AddSyst(cb,
-      'QCDscale_ttbar', 'lnN', ch.SystMap('channel','bin_id','process') 
-      (['Zee','Zmm'],[1,2,3,4,5,6,7,8],['s_Top'], 1.06)
-      (['Znn'],[1,3,5,7],['TT'],1.06)) 
-
-  cb.cp().AddSyst(cb,
-      'QCDscale_VV', 'lnN', ch.SystMap('channel','bin_id','process') 
-      (['Zee','Zmm','Znn'],[1,2,3,4,5,6,7,8],['VVLF','VVHF'], 1.04)) 
-
-  cb.cp().AddSyst(cb,
-      'CMS_vhbb_boost_EWK_13TeV', 'lnN', ch.SystMap('channel','bin_id','process') 
-      (['Zee','Zmm'],[1,2,3,4,5,6,7,8],['ZH_hbb'], 1.02)
-      (['Znn'],[1,3,5,7],['ZH_hbb','WH_hbb','ggZH_hbb'],1.02)
-      (['Wen','Wmn'],[1,3,5,7],['WH_hbb','ZH_hbb'],1.02)) 
-
-  cb.cp().AddSyst(cb,
-      'CMS_vhbb_boost_QCD_13TeV', 'lnN', ch.SystMap('channel','bin_id','process') 
-      (['Zee','Zmm'],[1,2,3,4,5,6,7,8],['ZH_hbb'], 1.05)
-      (['Znn'],[1,3,5,7],['ZH_hbb','WH_hbb','ggZH_hbb'],1.05)) 
 
   cb.cp().AddSyst(cb,
       'CMS_vhbb_VV', 'lnN', ch.SystMap('channel','bin_id','process') 
