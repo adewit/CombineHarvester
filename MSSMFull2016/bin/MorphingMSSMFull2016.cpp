@@ -44,6 +44,164 @@ void To1Bin(T* proc)
                                    // integral of the hist
 }
 
+template <typename T>
+void MTtotToMVisSignal(T* proc)
+{
+   std::unique_ptr<TH1> originalHist=proc->ClonedScaledShape();
+   for(int i=1;i< originalHist->GetNbinsX();i++){
+     double bincenter = originalHist->GetBinCenter(i);
+     double bincontent = originalHist->GetBinContent(i);
+     if(bincenter < 40. || bincenter > 160){
+         originalHist->SetBinContent(i,0);
+         originalHist->SetBinError(i,0);
+     } else if (bincenter < 60.){
+         originalHist->SetBinContent(i,bincontent*3.18);
+     } else if (bincenter < 80.){
+         originalHist->SetBinContent(i,bincontent*3.60);
+     } else if (bincenter < 100.){
+         originalHist->SetBinContent(i,bincontent*0.947);
+     } else if (bincenter < 120.){
+         originalHist->SetBinContent(i,bincontent*0.289);
+     } else if (bincenter < 140.){
+         originalHist->SetBinContent(i,bincontent*0.019231);
+     } else if (bincenter < 160.){
+         originalHist->SetBinContent(i,bincontent*0.143);
+     }
+  }
+  proc->set_shape(std::move(originalHist),false);
+}
+
+
+template <typename T>
+void MTtotToMVisSignalSyst(T* syst)
+{
+   std::unique_ptr<TH1> systUp=syst->ClonedShapeU();
+   std::unique_ptr<TH1> systDown=syst->ClonedShapeD();
+   for(int i=1;i< systUp->GetNbinsX();i++){
+     double bincenter = systUp->GetBinCenter(i);
+     double bincontentup = systUp->GetBinContent(i);
+     double bincontentdown = systDown->GetBinContent(i);
+     if(bincenter < 40. || bincenter > 160){
+         systUp->SetBinContent(i,0);
+         systUp->SetBinError(i,0);
+         systDown->SetBinContent(i,0);
+         systDown->SetBinError(i,0);
+     } else if (bincenter < 60.){
+         systUp->SetBinContent(i,bincontentup*3.18);
+         systDown->SetBinContent(i,bincontentdown*3.18);
+     } else if (bincenter < 80.){
+         systUp->SetBinContent(i,bincontentup*3.60);
+         systDown->SetBinContent(i,bincontentdown*3.60);
+     } else if (bincenter < 100.){
+         systUp->SetBinContent(i,bincontentup*0.947);
+         systDown->SetBinContent(i,bincontentdown*0.947);
+     } else if (bincenter < 120.){
+         systUp->SetBinContent(i,bincontentup*0.289);
+         systDown->SetBinContent(i,bincontentdown*0.289);
+     } else if (bincenter < 140.){
+         systUp->SetBinContent(i,bincontentup*0.019231);
+         systDown->SetBinContent(i,bincontentdown*0.019231);
+     } else if (bincenter < 160.){
+         systUp->SetBinContent(i,bincontentup*0.143);
+         systDown->SetBinContent(i,bincontentdown*0.143);
+     }
+  }
+  syst->set_shapes(std::move(systUp),std::move(systDown),nullptr);
+}
+
+
+
+template <typename T>
+void MTtotToMVisTTbar(T* proc)
+{
+   std::unique_ptr<TH1> originalHist=proc->ClonedScaledShape();
+   for(int i=1;i< originalHist->GetNbinsX();i++){
+     double bincenter = originalHist->GetBinCenter(i);
+     double bincontent = originalHist->GetBinContent(i);
+     if(bincenter > 200){
+        originalHist->SetBinContent(i,0);
+        originalHist->SetBinError(i,0);
+     } else if (bincenter < 20.){
+        originalHist->SetBinContent(i,bincontent*0.3333);
+     } else if (bincenter < 40.){
+        originalHist->SetBinContent(i,bincontent*9.333);
+     } else if (bincenter < 60.){
+        originalHist->SetBinContent(i,bincontent*2.313);
+     } else if (bincenter < 80.){
+        originalHist->SetBinContent(i,bincontent*1.178);
+     } else if (bincenter < 100.){
+        originalHist->SetBinContent(i, bincontent*1.114);
+     } else if (bincenter < 120.){
+        originalHist->SetBinContent(i, bincontent*0.66);
+     } else if (bincenter < 140.){
+        originalHist->SetBinContent(i, bincontent*1.023);
+     } else if (bincenter < 160.){
+        originalHist->SetBinContent(i, bincontent*0.308);
+     } else if (bincenter < 180.){
+        originalHist->SetBinContent(i, bincontent*0.3929);
+     } else if (bincenter < 200.){ 
+        originalHist->SetBinContent(i, bincontent*1.222);
+     }
+  }
+  proc->set_shape(std::move(originalHist),false);
+}
+
+template <typename T>
+void MTtotToMVisTTbarSyst(T* syst)
+{
+   std::cout<<"Cloning shapes"<<std::endl;
+   std::unique_ptr<TH1> systUp=syst->ClonedShapeU();
+   std::unique_ptr<TH1> systDown=syst->ClonedShapeD();
+   std::cout<<systDown->GetNbinsX()<<std::endl;
+   std::cout<<"Looping through bins"<<std::endl;
+   std::cout<<systUp->GetNbinsX()<<std::endl;
+   for(int i=1;i< systUp->GetNbinsX();i++){
+     std::cout<<i<<std::endl;
+     double bincenter = systUp->GetBinCenter(i);
+     double bincontentup = systUp->GetBinContent(i);
+     double bincontentdown = systDown->GetBinContent(i);
+     if(bincenter > 200){
+        systUp->SetBinContent(i,0);
+        systUp->SetBinError(i,0);
+        systDown->SetBinContent(i,0);
+        systDown->SetBinError(i,0);
+     } else if (bincenter < 20.){
+        systUp->SetBinContent(i,bincontentup*0.3333);
+        systDown->SetBinContent(i,bincontentdown*0.3333);
+     } else if (bincenter < 40.){
+        systUp->SetBinContent(i,bincontentup*9.333);
+        systDown->SetBinContent(i,bincontentdown*9.333);
+     } else if (bincenter < 60.){
+        systUp->SetBinContent(i,bincontentup*2.313);
+        systDown->SetBinContent(i,bincontentdown*2.313);
+     } else if (bincenter < 80.){
+        systUp->SetBinContent(i,bincontentup*1.178);
+        systDown->SetBinContent(i,bincontentdown*1.178);
+     } else if (bincenter < 100.){
+        systUp->SetBinContent(i, bincontentup*1.114);
+        systDown->SetBinContent(i, bincontentdown*1.114);
+     } else if (bincenter < 120.){
+        systUp->SetBinContent(i, bincontentup*0.66);
+        systDown->SetBinContent(i, bincontentdown*0.66);
+     } else if (bincenter < 140.){
+        systUp->SetBinContent(i, bincontentup*1.023);
+        systDown->SetBinContent(i, bincontentdown*1.023);
+     } else if (bincenter < 160.){
+        systUp->SetBinContent(i, bincontentup*0.308);
+        systDown->SetBinContent(i, bincontentdown*0.308);
+     } else if (bincenter < 180.){
+        systUp->SetBinContent(i, bincontentup*0.3929);
+        systDown->SetBinContent(i, bincontentdown*0.3929);
+     } else if (bincenter < 200.){ 
+        systUp->SetBinContent(i, bincontentup*1.222);
+        systDown->SetBinContent(i, bincontentdown*1.222);
+     }
+  }
+  std::cout<<"Setting shapes"<<std::endl;
+  syst->set_shapes(std::move(systUp),std::move(systDown),nullptr);
+  std::cout<<"Done"<<std::endl;
+}
+
 //Treatment is different for single bin control regions than for multi-bin cr's
 //Introduce a BinIsSBControlRegion to filter out the single bin cr's and
 //Let BinIsControlRegion filter all control regions
@@ -74,7 +232,7 @@ bool BinIsNotControlRegion(ch::Object const* obj)
 int main(int argc, char** argv) {
   // First define the location of the "auxiliaries" directory where we can
   // source the input files containing the datacard shapes
-  string SM125= "";
+  string SM125= "bkg_SM125";
   string mass = "mA";
   string output_folder = "mssm_run2";
   // TODO: option to pick up cards from different dirs depending on channel?
@@ -97,8 +255,10 @@ int main(int argc, char** argv) {
   bool ttbar_fit = true;
   bool do_jetfakes = true;
   bool postfit_plot = false;
+  bool adjust_mostly_with_signal = false;
+  bool adjust_mostly_with_background = false;
   bool partial_unblinding = false;
-  bool ggHatNLO = true;
+  bool ggHatNLO = false;
   bool mod_indep_use_sm = true;  // Use the SM fractions of t:b:i for ggH at NLO
   string mod_indep_h = "h";
   string sm_gg_fractions = "shapes/Models/higgs_pt_v3.root";
@@ -130,6 +290,8 @@ int main(int argc, char** argv) {
     ("w_weighting", po::value<bool>(&do_w_weighting)->default_value(do_w_weighting))
     ("partial_unblinding", po::value<bool>(&partial_unblinding)->default_value(partial_unblinding))
     ("ggHatNLO", po::value<bool>(&ggHatNLO)->default_value(ggHatNLO))
+    ("adjust_mostly_with_signal", po::value<bool>(&adjust_mostly_with_signal)->default_value(adjust_mostly_with_signal))
+    ("adjust_mostly_with_background", po::value<bool>(&adjust_mostly_with_background)->default_value(adjust_mostly_with_background))
     ("mod_indep_use_sm", po::value<bool>(&mod_indep_use_sm)->default_value(mod_indep_use_sm))
     ("mod_indep_h", po::value<string>(&mod_indep_h)->default_value(mod_indep_h));
   po::store(po::command_line_parser(argc, argv).options(config).run(), vm);
@@ -139,6 +301,12 @@ int main(int argc, char** argv) {
     std::cerr << "\n" << "ERROR: jetfakes and control_region flags cannot be true at the same time. Use --control-region=0 if you want to use the jet fake estimates." << "\n";
     exit (EXIT_FAILURE);
   }
+
+  if (adjust_mostly_with_signal && adjust_mostly_with_background){
+    std::cerr << "\n" << "ERROR: adjust_mostly_with_signal and adjust_mostly_with_background flags cannot be true at the same time. " << "\n";
+    exit (EXIT_FAILURE);
+  }
+
 
   typedef vector<string> VString;
   typedef vector<pair<int, string>> Categories;
@@ -325,13 +493,14 @@ int main(int argc, char** argv) {
       };
     }
   }
-  vector<string> sig_procs = {"ggH","bbH"};
+  vector<string> sig_procs = {"bbH"};
+  //vector<string> sig_procs = {"ggH","bbH"};
   for(auto chn : chns){
     cb.AddObservations({"*"}, {"htt"}, {"13TeV"}, {chn}, cats[chn+"_13TeV"]);
 
     cb.AddProcesses({"*"}, {"htt"}, {"13TeV"}, {chn}, bkg_procs[chn], cats[chn+"_13TeV"], false);
 
-    cb.AddProcesses(masses, {"htt"}, {"13TeV"}, {chn}, signal_types["ggH"], cats[chn+"_13TeV"], true);
+    //cb.AddProcesses(masses, {"htt"}, {"13TeV"}, {chn}, signal_types["ggH"], cats[chn+"_13TeV"], true);
     cb.AddProcesses(masses, {"htt"}, {"13TeV"}, {chn}, signal_types["bbH"], cats[chn+"_13TeV"], true);
     if(SM125==string("bkg_SM125") && chn!="zmm") cb.AddProcesses({"*"}, {"htt"}, {"13TeV"}, {chn}, SM_procs, cats[chn+"_13TeV"], false);
     if(SM125==string("signal_SM125") && chn!="zmm") cb.AddProcesses({"*"}, {"htt"}, {"13TeV"}, {chn}, SM_procs, cats[chn+"_13TeV"], true);
@@ -348,6 +517,10 @@ int main(int argc, char** argv) {
 
 
   ch::AddMSSMRun2Systematics(cb, control_region, zmm_fit, ttbar_fit);
+  ch::Parameter *lumiparam = cb.cp().GetParameter("lumiscale");
+  lumiparam->set_frozen(true);
+  
+
   //! [part7]
   for (string chn : chns) {
     std::string chn_label = chn;
@@ -412,6 +585,10 @@ int main(int argc, char** argv) {
      });*/
   }
 
+  cb.cp().process({"bbH"}).ForEachProc([&](ch::Process *proc) {
+    proc->set_rate(proc->rate()*0.0627*0.4863);
+  });
+
   // And convert any shapes in the CRs to lnN:
   // Convert all shapes to lnN at this stage
   cb.cp().FilterSysts(BinIsNotSBControlRegion).syst_type({"shape"}).ForEachSyst([](ch::Systematic *sys) {
@@ -432,6 +609,21 @@ int main(int argc, char** argv) {
         }
   }
 
+
+  if(adjust_mostly_with_background){
+     cb.cp().channel({"et","mt","tt"}).process({"bbH"}).bin_id({9,11}).ForEachProc(MTtotToMVisSignal<ch::Process>);
+     cb.cp().channel({"et","mt","tt"}).process({"bbH"}).bin_id({9,11}).syst_type({"shape"}).ForEachSyst(MTtotToMVisSignalSyst<ch::Systematic>);
+
+     cb.cp().channel({"et","mt","tt"}).process({"ZL","TTT","VVT","ZTT","jetFakes","ggH_SM125","qqH_SM125","ZH_SM125","WminusH_SM125","WplusH_SM125"}).bin_id({9,11}).ForEachProc(MTtotToMVisTTbar<ch::Process>);
+     cb.cp().channel({"et","mt","tt"}).process({"ZL","TTT","VVT","ZTT","jetFakes","ggH_SM125","qqH_SM125","ZH_SM125","WminusH_SM125","WplusH_SM125"}).bin_id({9,11}).syst_type({"shape"}).ForEachSyst(MTtotToMVisTTbarSyst<ch::Systematic>);
+  } 
+  if (adjust_mostly_with_signal){
+     cb.cp().channel({"et","mt","tt"}).process({"TTT"}).bin_id({9,11}).ForEachProc(MTtotToMVisTTbar<ch::Process>);
+     cb.cp().channel({"et","mt","tt"}).process({"TTT"}).bin_id({9,11}).syst_type({"shape"}).ForEachSyst(MTtotToMVisTTbarSyst<ch::Systematic>);
+
+     cb.cp().channel({"et","mt","tt"}).process({"ZL","bbH","VVT","ZTT","jetFakes","ggH_SM125","qqH_SM125","ZH_SM125","WminusH_SM125","WplusH_SM125"}).bin_id({9,11}).ForEachProc(MTtotToMVisSignal<ch::Process>);
+     cb.cp().channel({"et","mt","tt"}).process({"ZL","bbH","VVT","ZTT","jetFakes","ggH_SM125","qqH_SM125","ZH_SM125","WminusH_SM125","WplusH_SM125"}).bin_id({9,11}).syst_type({"shape"}).ForEachSyst(MTtotToMVisSignalSyst<ch::Systematic>);
+  }
 
   // Merge to one bin for control region bins
   cb.cp().FilterAll(BinIsNotSBControlRegion).ForEachProc(To1Bin<ch::Process>);

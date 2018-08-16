@@ -1431,5 +1431,7 @@ void AddMSSMRun2Systematics(CombineHarvester & cb, int control_region, bool zmm_
        cb_sig.cp().attr({"nobtag","btag","all"},"cat").process({"TTT","TT"}).AddSyst(cb, "rate_TT","rateParam",SystMap<>::init(1.0));
        cb.GetParameter("rate_TT")->set_range(0.0,5.0);
    }
+  cb.cp().AddSyst(cb,"lumiscale","rateParam",SystMap<>::init(1.0));
+
   }
 }

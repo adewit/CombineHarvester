@@ -971,7 +971,7 @@ void CombineHarvester::WriteDatacard(std::string const& name,
 
   // Need to write parameters here that feature both in the list of pdf
   // dependents and sys_set.
-  for (auto par : params_) {
+  /*for (auto par : params_) {
     Parameter const* p = par.second.get();
     if (p->err_d() != 0.0 && p->err_u() != 0.0 &&
         all_dependents_pars.count(p->name()) && sys_set.count(p->name())) {
@@ -983,7 +983,7 @@ void CombineHarvester::WriteDatacard(std::string const& name,
       }
       txt_file << "\n";
     }
-  }
+  }*/
 
   for (auto const& sys : sys_set) {
     std::vector<std::string> line(procs_.size() + 2);
