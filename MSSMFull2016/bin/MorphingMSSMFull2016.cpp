@@ -747,7 +747,7 @@ int main(int argc, char** argv) {
     }
   });
 
-  cout << "Generating bbb uncertainties...";
+  /*cout << "Generating bbb uncertainties...";
   auto bbb = ch::BinByBinFactory()
     .SetPattern("CMS_$ANALYSIS_$BIN_$ERA_$PROCESS_bin_$#")
     .SetAddThreshold(0.)
@@ -772,6 +772,7 @@ int main(int argc, char** argv) {
   bbb_ctl.MergeBinErrors(cb.cp().process({"QCD", "W"}, false).FilterProcs(BinIsNotSBControlRegion));
   bbb_ctl.AddBinByBin(cb.cp().process({"QCD", "W"}, false).FilterProcs(BinIsNotSBControlRegion), cb);
   cout << " done\n";
+  */
 
   if(postfit_plot){
     cb.ForEachSyst([](ch::Systematic *s) {
