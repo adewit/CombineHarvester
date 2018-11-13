@@ -212,6 +212,7 @@ cb.SetGroup('pResJ',['CMS_res_j'])
 cb.SetGroup('pEleID',['CMS_vhbb_eff_e_MVAID_Zll_13TeV','CMS_vhbb_eff_e_Wln_13TeV','CMS_vhbb_eff_e_tracker_Zll_13TeV'])
 cb.SetGroup('pMuonID',['CMS_vhbb_eff_m_ISO_Zll_13TeV','CMS_vhbb_eff_m_MVAID_Zll_13TeV','CMS_vhbb_eff_m_Wln_13TeV','CMS_vhbb_eff_m_tracker_Zll_13TeV'])
 cb.SetGroup('unassigned',['CMS_vhbb_eff_e_trigger_Zll_13TeV','CMS_vhbb_eff_m_trigger_Zll_13TeV','CMS_vhbb_trigger_MET_13TeV','CMS_vhbb_ptwweights_tt','CMS_vhbb_ptwweights_whf','CMS_vhbb_ptwweights_wlf'])
+cb.SetGroup('bbb',['CMS_vhbb_stat.*'])
 
 print args.inc_beff
 cb.cp().process(['Zj2b','Wj2b','TT','VVHF','WH_hbb','ZH_hbb','ggZH_hbb']).ForEachProc(lambda x: x.set_rate(x.rate()*args.inc_beff*args.inc_beff))

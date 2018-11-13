@@ -107,10 +107,11 @@ gr_s1.Draw("SAMEP")
 gr_s2.Draw("SAMEP")
 gr_stat.Draw("SAMEP")
 
-legend = ROOT.TLegend(0.7, 0.7, 0.9, 0.93, '', 'NBNDC')
-legend.AddEntry(gr_s1, 'YR2018 S1', 'L')
-legend.AddEntry(gr_s2, 'YR2018 S2', 'L')
-legend.AddEntry(gr_stat, 'Stat Only', 'L')
+legend = ROOT.TLegend(0.55, 0.8, 0.9, 0.93, '', 'NBNDC')
+legend.SetTextSize(0.03)
+legend.AddEntry(gr_s1, 'w/ Run 2 syst. uncert. (S1)', 'L')
+legend.AddEntry(gr_s2, 'w/ YR18 syst. uncert. (S2)', 'L')
+legend.AddEntry(gr_stat, 'w/ Stat. uncert. only', 'L')
 legend.Draw()
 
 

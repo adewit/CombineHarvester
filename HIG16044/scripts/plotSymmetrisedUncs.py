@@ -19,7 +19,6 @@ xvals=[]
 yvals_s1=[]
 yvals_s2=[]
 yvals_statonly=[]
-
 xvals.append(300.0)
 yvals_s1.append(0.143)
 yvals_s2.append(0.123)
@@ -58,7 +57,7 @@ canv = ROOT.TCanvas('c1', 'c1',400,300)
 pads = plot.OnePad()
 pads[0].SetTicky(0)
 
-axis = ROOT.TH2F('axis','',1,0,0.27,4,0,1)
+axis = ROOT.TH2F('axis','',1,0,0.3,4,0,1)
 plot.Set(axis.GetXaxis(), Title = 'Expected uncertainty on #mu_{VHbb}')
 axis.GetYaxis().SetBinLabel(3, '300 fb^{-1}')
 axis.GetYaxis().SetBinLabel(2, '3000 fb^{-1}')
@@ -72,7 +71,7 @@ gr_s2.Draw("SAMEP")
 gr_stat.Draw("SAMEP")
 
 latex = ROOT.TLatex()
-plot.Set(latex, TextAlign=12,TextSize=0.035)
+plot.Set(latex, TextAlign=12,TextSize=0.038)
 latex.SetTextFont(42)
 txt_dict = {
 '300': '0.10 (Stat); 0.12 (S2); 0.14 (S1)',
@@ -84,15 +83,16 @@ latex.DrawLatex(0.16,0.375,txt_dict['3000'])
 
 
 
-legend = ROOT.TLegend(0.7, 0.7, 0.9, 0.93, '', 'NBNDC')
-legend.AddEntry(gr_s1, 'YR2018 S1', 'L')
-legend.AddEntry(gr_s2, 'YR2018 S2', 'L')
-legend.AddEntry(gr_stat, 'Stat Only', 'L')
+legend = ROOT.TLegend(0.55, 0.75, 0.9, 0.93, '', 'NBNDC')
+legend.SetTextSize(0.04)
+legend.AddEntry(gr_s1, 'w/ Run 2 syst. uncert. (S1)', 'L')
+legend.AddEntry(gr_s2, 'w/ YR18 syst. uncert. (S2)', 'L')
+legend.AddEntry(gr_stat, 'w/ Stat. uncert. only', 'L')
 legend.Draw()
 
 
 plot.DrawCMSLogo(pads[0],'CMS','Projection',11,0.045,0.03,1.0,'',1.0)
-plot.DrawTitle(pads[0],'#sqrt{s} = 13 TeV',3)
+plot.DrawTitle(pads[0],'13 TeV',3)
 canv.SaveAs('Uncert300and3000.pdf')
 canv.Print('Uncert300and3000.png')
 

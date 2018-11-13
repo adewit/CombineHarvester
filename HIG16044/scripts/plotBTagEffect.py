@@ -11,7 +11,7 @@ from array import array
 
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 ROOT.gROOT.SetBatch(ROOT.kTRUE)
-plot.ModTDRStyle()
+plot.ModTDRStyle(b=0.14)
 
 xvals = []
 yvals_s1 = []
@@ -20,7 +20,7 @@ yvals_s1_300 = []
 yvals_s2_300 = []
 
 xvals.append(0.85)
-xvals.append(0.90)
+xvals.append(0.9)
 xvals.append(0.95)
 xvals.append(1.0)
 xvals.append(1.05)
@@ -70,13 +70,15 @@ plot.Set(gr_s2_300, LineColor=ROOT.kRed, MarkerColor=ROOT.kRed, LineWidth=2, Lin
 
 canv = ROOT.TCanvas('BTagEff','')
 pads = plot.OnePad()
-gr_s1_3000.GetYaxis().SetRangeUser(0,0.2)
+gr_s1_3000.GetYaxis().SetRangeUser(0,0.25)
 gr_s1_3000.GetXaxis().SetRangeUser(0.8,1.2)
 gr_s1_3000.GetXaxis().SetNdivisions(9)
 gr_s1_3000.Draw('APL')
 axishist = plot.GetAxisHist(pads[0])
 axishist.SetMinimum(0)
-plot.Set(axishist.GetXaxis(), Title='B-tagging efficiency wrt current')
+#plot.Set(axishist.GetXaxis(), Title='#frac{#varepsilon_{b-tag}}{#varepsilon_{b-tag, Run 2}}')
+axishist.GetXaxis().SetTitleOffset(axishist.GetXaxis().GetTitleOffset()*0.85)
+plot.Set(axishist.GetXaxis(), Title='#varepsilon^{b-tag}/#varepsilon^{b-tag}_{Run 2}')
 plot.Set(axishist.GetYaxis(), Title='Expected uncertainty on #mu_{VHbb}')
 
 gr_s1_3000.Draw('PLSAME')
@@ -84,15 +86,16 @@ gr_s2_3000.Draw('PLSAME')
 gr_s1_300.Draw('PLSAME')
 gr_s2_300.Draw('PLSAME')
 
-legend = ROOT.TLegend(0.65, 0.7, 0.9, 0.93, '', 'NBNDC')
-legend.AddEntry(gr_s1_3000, 'YR2018 S1 (3000 fb^{-1} )', 'L')
-legend.AddEntry(gr_s2_3000, 'YR2018 S2 (3000 fb^{-1} )', 'L')
-legend.AddEntry(gr_s1_300, 'YR2018 S1 (300 fb^{-1} )', 'L')
-legend.AddEntry(gr_s2_300, 'YR2018 S2 (300 fb^{-1} )', 'L')
+legend = ROOT.TLegend(0.4, 0.75, 0.9, 0.93, '', 'NBNDC')
+legend.SetTextSize(0.028)
+legend.AddEntry(gr_s1_3000, 'w/ Run 2 syst. uncert. (S1) (3000 fb^{-1} )', 'L')
+legend.AddEntry(gr_s2_3000, 'w/ YR18 syst. uncert. (S2) (3000 fb^{-1} )', 'L')
+legend.AddEntry(gr_s1_300, 'w/ Run 2 syst. uncert. (S1) (300 fb^{-1} )', 'L')
+legend.AddEntry(gr_s2_300, 'w/ YR18 syst. uncert. (S2) (300 fb^{-1} )', 'L')
 legend.Draw()
 
 plot.DrawCMSLogo(pads[0],'CMS','Projection',11,0.045,0.03,1.0,'',1.0)
-plot.DrawTitle(pads[0],'#sqrt{s} = 13 TeV',3)
+plot.DrawTitle(pads[0],'13 TeV',3)
 canv.SaveAs('BTagEff_Fig.pdf')
 canv.Print('BTagEff_Fig.png')
 
